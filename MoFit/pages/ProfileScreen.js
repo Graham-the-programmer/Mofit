@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TextInput, Button, Image, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {StyleSheet, Text, View, ScrollView, TextInput, Button, Image, TouchableOpacity,SafeAreaView,} from 'react-native';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import * as ImagePicker from 'expo-image-picker';
 import { db } from './firebaseConfig';
-
-import appStyles from '../components/Styles';
 
 const ProfileScreen = () => {
   const [userData, setUserData] = useState({
@@ -67,53 +64,83 @@ const ProfileScreen = () => {
   };
 
   return (
-    <SafeAreaView style={appStyles.container}>
-      <ScrollView>
-        <View style={styles.profileContainer}>
-          <TouchableOpacity onPress={pickImage}>
-            <Image
-              source={userData.profilePicture ? { uri: userData.profilePicture } : require('../assets/default-profile.png')}
-              style={styles.profileImage}
-            />
-          </TouchableOpacity>
-          <Text style={appStyles.title}>Edit Profile</Text>
-          <Text style={appStyles.text}>Email: {user.email}</Text>
-          
-          <Text style={styles.label}>First Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="First Name"
-            placeholderTextColor="#888"
-            value={userData.first_name}
-            onChangeText={(text) => setUserData({ ...userData, first_name: text })}
-          />
+    <View style={{ flex: 1 }}>
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: '#121212' }]} />
+      <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <View style={styles.profileContainer}>
+            <TouchableOpacity onPress={pickImage}>
+              <Image
+                source={
+                  userData.profilePicture
+                    ? { uri: userData.profilePicture }
+                    : require('../assets/default-profile.png')
+                }
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
+            <Text style={styles.title}>Edit Profile</Text>
+            <Text style={styles.text}>Email: {user.email}</Text>
 
-          <Text style={styles.label}>Last Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Last Name"
-            placeholderTextColor="#888"
-            value={userData.last_name}
-            onChangeText={(text) => setUserData({ ...userData, last_name: text })}
-          />
-          <Button title="Save" onPress={handleSave} />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            <Text style={styles.label}>First Name</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="First Name"
+              placeholderTextColor="#888"
+              value={userData.first_name}
+              onChangeText={(text) =>
+                setUserData({ ...userData, first_name: text })
+              }
+            />
+
+            <Text style={styles.label}>Last Name</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Last Name"
+              placeholderTextColor="#888"
+              value={userData.last_name}
+              onChangeText={(text) =>
+                setUserData({ ...userData, last_name: text })
+              }
+            />
+            <Button title="Save" onPress={handleSave} />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 };
 
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   profileContainer: {
     alignItems: 'center',
     marginTop: 20,
+    paddingHorizontal: 20,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#97FB57',
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 16,
+    color: '#f2f6f6',
     marginBottom: 20,
   },
   label: {

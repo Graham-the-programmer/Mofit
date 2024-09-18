@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import StepCounter from './components/StepCounter';
 import appStyles from './components/Styles';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,  DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
@@ -14,6 +14,18 @@ import Dashboard from './pages/Dashboard';
 import LoginScreen from './pages/LoginScreen';
 import ProfileScreen from './pages/ProfileScreen';
 import StepPage from './pages/StepPage';
+import MapPage from './pages/MapPage';
+
+
+
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#121212',
+  },
+};
+
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -60,7 +72,9 @@ export default function App() {
               iconName = 'person-outline';
             } else if (route.name === 'Steps') {
               iconName = 'footsteps-outline';
-            }
+            }  else if (route.name === 'Map') {  
+            iconName = 'map-outline';
+          }
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -84,16 +98,27 @@ export default function App() {
         <Tab.Screen name="Home" component={Dashboard} options={{ headerShown: false }} />
         <Tab.Screen name="Steps" component={StepPage} options={{ headerShown: false }} />
         <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+        <Tab.Screen name="Map" component={MapPage} options={{ headerShown: false }} />
       </Tab.Navigator>
     );
   }
+
+  // Handle navigation after login
+  const handleLoginNavigation = (navigation) => {
+    // If user is logged in, navigate to the Profile tab
+    if (user) {
+      navigation.navigate('MainTabs', { screen: 'Profile' }); // Navigate to the Profile tab
+    } else {
+      navigation.navigate('Login'); // Navigate to Login if no user
+    }
+  };
 
   // Main Stack Navigator
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={user ? 'MainTabs' : 'Login'}>
-        <Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name='MainTabs' component={BottomTabNavigator} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

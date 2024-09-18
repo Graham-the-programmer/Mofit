@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, DeviceEventEmitter } from 'react-native';
 import CircularProgress from 'react-native-circular-progress-indicator';
-import { Pedometer } from 'expo-sensors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const StepCounter = () => {
-  const [stepCount, updateStepCount] = useState(0);
+const DashboardStepCounter = () => {
+  const [stepCount, setStepCount] = useState(0);
+
+  const getStepsFromStorage = async () => {
+    const storedData = await AsyncStorage.getItem('stepData');
+    if (storedData !== null) {
+      const stepData = JSON.parse(storedData);
+      setStepCount(stepData.steps || 0);
+    }
+  };
 
   useEffect(() => {
-    const startPedometer = () => {
-      const subscription = Pedometer.watchStepCount((result) => {
-        updateStepCount(result.steps);
-      });
-      return subscription;
-    };
+    
+    getStepsFromStorage();
 
-    const subscription = startPedometer();
+   
+    const subscription = DeviceEventEmitter.addListener('stepCountChanged', (newStepCount) => {
+      setStepCount(newStepCount);
+    });
 
     return () => {
-      if (subscription) subscription.remove();
+      
+      subscription.remove();
     };
   }, []);
 
@@ -26,23 +34,23 @@ const StepCounter = () => {
       <CircularProgress
         value={stepCount}
         maxValue={20000}
-        radius={75}
+        radius={50} 
         titleColor={'grey'}
         activeStrokeColor={'#97FB57'}
         inActiveStrokeColor={'grey'}
         inActiveStrokeOpacity={0.5}
-        inActiveStrokeWidth={20}
-        activeStrokeWidth={20}
+        inActiveStrokeWidth={10}
+        activeStrokeWidth={10}
         title={'Steps'}
-        titleStyle={{ fontSize: 18 }}
+        titleStyle={{ fontSize: 14 }}
         textColor={'grey'}
-        textStyle={{ fontSize: 32 }}
+        textStyle={{ fontSize: 24 }}
       />
     </View>
   );
 };
 
-export default StepCounter;
+export default DashboardStepCounter;
 
 const styles = StyleSheet.create({
   progressContainer: {

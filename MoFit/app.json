@@ -15,11 +15,16 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
+  "adaptiveIcon": {
+    "foregroundImage": "./assets/adaptive-icon.png",
+    "backgroundColor": "#ffffff"
+  },
+  "config": {
+    "googleMaps": {
+      "apiKey": "AIzaSyBkVgsMIqNACN89hJ1F1kvF-n6QE8Yjm_s"
+    }
+  }
+},
     "web": {
       "favicon": "./assets/favicon.png"
     }
