@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
+// main title for log in screen ----- update font family for better font
 const Title = () => {
   return (
     <View style={styles.container}>

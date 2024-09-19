@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DashboardStepCounter = () => {
   const [stepCount, setStepCount] = useState(0);
-
+  // get step data from storage 
   const getStepsFromStorage = async () => {
     const storedData = await AsyncStorage.getItem('stepData');
     if (storedData !== null) {
@@ -30,6 +30,7 @@ const DashboardStepCounter = () => {
   }, []);
 
   return (
+    // desktop step display
     <View style={styles.progressContainer}>
       <CircularProgress
         value={stepCount}

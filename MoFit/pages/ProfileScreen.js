@@ -15,7 +15,7 @@ const ProfileScreen = () => {
 
   const auth = getAuth();
   const user = auth.currentUser;
-
+// fetch user data from firebas db
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -34,7 +34,7 @@ const ProfileScreen = () => {
 
     fetchUserData();
   }, []);
-
+  // update firebase db with new user info
   const handleSave = async () => {
     try {
       const docRef = doc(db, 'users', user.uid);
@@ -49,7 +49,7 @@ const ProfileScreen = () => {
       alert('Error updating profile');
     }
   };
-
+  // launch image picker from users pictures
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,

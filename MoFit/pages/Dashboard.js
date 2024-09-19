@@ -7,12 +7,12 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 import DailyQuote from '../components/DailyQuote';
 import DashboardStepCounter from '../components/DashboardStepCounter';
-
+import DailyChallengeCard from '../components/DailyChallenge';
 
 const Dashboard = ({ navigation }) => {
   const [userName, setUserName] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
-
+  // retrive user dada for profile pic and name
   useEffect(() => {
     const fetchUserData = async () => {
       const auth = getAuth(); 
@@ -32,16 +32,16 @@ const Dashboard = ({ navigation }) => {
 
     fetchUserData();
   }, []);
-
+        // logout button logic
   const handleLogout = () => {
     const auth = getAuth();
     auth.signOut().then(() => {
       navigation.replace('Login'); 
     });
   };
-
+  // gym button logic
   const handleShowGyms = () => {
-    navigation.navigate('Map'); // Ensure 'Map' is the correct route name
+    navigation.navigate('Map'); 
   };
 
   return (
@@ -69,9 +69,10 @@ const Dashboard = ({ navigation }) => {
 
         <DailyQuote />
 
+    
         <View style={styles.cardContainer}>
           <TouchableOpacity style={styles.gymButton} onPress={handleShowGyms}>
-          <FontAwesome5 name="dumbbell" size={50} color="#97FB57" style={styles.icon} />
+            <FontAwesome5 name="dumbbell" size={50} color="#97FB57" style={styles.icon} />
             <Text style={styles.gymButtonText}>Show gyms near me</Text>
           </TouchableOpacity>
 
@@ -79,6 +80,9 @@ const Dashboard = ({ navigation }) => {
             <DashboardStepCounter />
           </View>
         </View>
+
+        
+        <DailyChallengeCard style={styles.dailyChallengeCard} />
       </View>
     </View>
   );
@@ -90,7 +94,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-   
   },
   welcomeContainer: {
     flexDirection: 'row', 
@@ -127,7 +130,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     marginTop: 20,
-    
   },
   gymButton: {
     backgroundColor: '#1E1E1E',
@@ -154,7 +156,8 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: 'center',
     alignItems: 'center',
-    
-
+  },
+  dailyChallengeCard: {
+    marginTop: 30,
   },
 });

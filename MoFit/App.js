@@ -32,19 +32,17 @@ export default function App() {
   const Tab = createBottomTabNavigator();
   const auth = getAuth();
 
-  // State to manage user and loading status
+  
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check if user is logged in on app start
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // User is logged in, save to AsyncStorage
         await AsyncStorage.setItem('user', JSON.stringify(user));
         setUser(user);
       } else {
-        // No user is logged in, remove from AsyncStorage
         await AsyncStorage.removeItem('user');
         setUser(null);
       }
@@ -55,10 +53,10 @@ export default function App() {
   }, []);
 
   if (loading) {
-    return null; // Add a loading screen or spinner here if desired
+    return null; 
   }
 
-  // Bottom Tab Navigator
+  
   function BottomTabNavigator() {
     return (
       <Tab.Navigator
@@ -103,17 +101,17 @@ export default function App() {
     );
   }
 
-  // Handle navigation after login
+  // ---- not required??
   const handleLoginNavigation = (navigation) => {
-    // If user is logged in, navigate to the Profile tab
+    
     if (user) {
-      navigation.navigate('MainTabs', { screen: 'Profile' }); // Navigate to the Profile tab
+      navigation.navigate('MainTabs', { screen: 'Profile' }); 
     } else {
-      navigation.navigate('Login'); // Navigate to Login if no user
+      navigation.navigate('Login'); 
     }
   };
 
-  // Main Stack Navigator
+  
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={user ? 'MainTabs' : 'Login'}>

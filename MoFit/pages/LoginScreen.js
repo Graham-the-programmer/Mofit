@@ -11,6 +11,7 @@ import appStyles from '../components/Styles';
 import { useNavigation } from '@react-navigation/native';
 import Title from '../components/Title';
 
+// login screen 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +19,7 @@ const LoginScreen = () => {
   const auth = getAuth();
   const navigation = useNavigation();
 
- 
+//  sign up logic
 const createUser = () => {
   createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredentials) => {
@@ -34,7 +35,7 @@ const createUser = () => {
     })
     .catch((error) => alert(error.message));
 };
-
+  // sign in logic
   const signIn = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {

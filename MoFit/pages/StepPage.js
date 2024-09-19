@@ -1,28 +1,26 @@
-// StepPage.js
-import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Dimensions, DeviceEventEmitter } from 'react-native';
 import StepCounter from '../components/StepCounter';
 import { BarChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAuth } from 'firebase/auth';
-import appStyles from '../components/Styles';
 
 const screenWidth = Dimensions.get('window').width;
-
+//  step page handling step bar chart
 const StepPage = () => {
   const [weeklySteps, setWeeklySteps] = useState({
+    Sun: 0,
     Mon: 0,
     Tue: 0,
     Wed: 0,
     Thu: 0,
     Fri: 0,
     Sat: 0,
-    Sun: 0,
   });
 
   const auth = getAuth();
   const user = auth.currentUser;
-
+  // get weekly steps from async storage
   useEffect(() => {
     const getWeeklyStepsFromStorage = async () => {
       try {
@@ -36,8 +34,19 @@ const StepPage = () => {
     };
 
     getWeeklyStepsFromStorage();
-  }, []);
 
+    // listen for step change
+    const stepCountChangedListener = DeviceEventEmitter.addListener(
+      'stepCountChanged',
+      handleStepCountChange
+    );
+
+    return () => {
+      
+      stepCountChangedListener.remove();
+    };
+  }, []);
+  // 
   const handleStepCountChange = async (newStepCount) => {
     const today = new Date();
     const dayOfWeek = today.toLocaleString('en-US', { weekday: 'short' });
@@ -49,7 +58,7 @@ const StepPage = () => {
     });
   };
 
-  // Prepare data for the chart
+  
   const data = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
@@ -67,12 +76,14 @@ const StepPage = () => {
     ],
   };
 
+  const maxStepCount = 8000;
+
   const chartConfig = {
     backgroundGradientFrom: '#121212',
     backgroundGradientTo: '#232323',
     fillShadowGradient: '#97FB57',
     fillShadowGradientOpacity: 1,
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    color: (opacity = .5) => `rgba(255, 255, 255, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     barPercentage: 0.7,
     decimalPlaces: 0,
@@ -86,44 +97,53 @@ const StepPage = () => {
   };
 
   return (
-    <ScrollView style={appStyles.container} contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={appStyles.container}>
-        <Text style={appStyles.title}>Step Counter</Text>
-        <StepCounter onStepCountChange={handleStepCountChange} />
+    <View style={{ flex: 1 }}>
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: '#121212' }]} />
+      <View style={styles.container}>
+        
+        <StepCounter />
 
-        <Text style={appStyles.title}>Steps This Week</Text>
+        <Text style={styles.title} marginTop={30}>Steps This Week</Text>
 
-        <ScrollView horizontal={true} style={styles.scrollContainer}>
-          <BarChart
-            data={data}
-            width={screenWidth}
-            height={300}
-            chartConfig={chartConfig}
-            verticalLabelRotation={0}
-            style={styles.chartStyle}
-            fromZero={true}
-            showValuesOnTopOfBars={true}
-            withInnerLines={true}
-            yAxisLabel=""
-            yAxisSuffix=" steps"
-            yAxisInterval={1000}
-          />
-        </ScrollView>
+        <BarChart
+          
+          data={data}
+          width={screenWidth - 40} 
+          height={300}
+          chartConfig={chartConfig}
+          verticalLabelRotation={0}
+          style={styles.chartStyle}
+          fromZero={true}
+          showValuesOnTopOfBars={true}
+          yAxisLabel=""
+          yAxisSuffix=""
+          withInnerLines={true}
+          segments={4} 
+          yAxisInterval={maxStepCount / 4} 
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
 export default StepPage;
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexDirection: 'row',
-    paddingVertical: 10,
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    marginTop: 60,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#97FB57',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   chartStyle: {
     marginVertical: 8,
     borderRadius: 16,
-    paddingRight: 20,
   },
 });

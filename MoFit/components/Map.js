@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Alert, ActivityIndicator } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'; // Import PROVIDER_GOOGLE
 import * as Location from 'expo-location';
 
-// map screen ----- maybe make map a seperate component?
 const MapScreen = () => {
   const [region, setRegion] = useState(null);
   const [gyms, setGyms] = useState([]);
   const [loading, setLoading] = useState(true);
-  //  user location permission 
+
   useEffect(() => {
     (async () => {
-     
+      // Request location permissions
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission Denied', 'Permission to access location was denied');
@@ -19,7 +18,7 @@ const MapScreen = () => {
         return;
       }
 
-      
+      // Get the current location
       let location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
 
@@ -30,14 +29,14 @@ const MapScreen = () => {
         longitudeDelta: 0.0421,
       });
 
-      
+      // Fetch nearby gyms
       await findNearbyGyms(latitude, longitude);
       setLoading(false);
     })();
   }, []);
-  // map api and find nearby gym logic
+
   const findNearbyGyms = async (latitude, longitude) => {
-    const apiKey = 'AIzaSyBkVgsMIqNACN89hJ1F1kvF-n6QE8Yjm_s';
+    const apiKey = 'AIzaSyBkVgsMIqNACN89hJ1F1kvF-n6QE8Yjm_s'; // Replace with your actual Google Places API key
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=gym&key=${apiKey}`
@@ -51,7 +50,7 @@ const MapScreen = () => {
   };
 
   if (loading) {
-    
+    // Display a loading indicator while fetching location
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#97FB57" />
@@ -66,7 +65,7 @@ const MapScreen = () => {
           style={styles.map}
           initialRegion={region}
           showsUserLocation={true}
-          provider={PROVIDER_GOOGLE} 
+          provider={PROVIDER_GOOGLE} // Ensure the provider is set
         >
           {gyms.map((gym, index) => (
             <Marker

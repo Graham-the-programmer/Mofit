@@ -7,7 +7,7 @@ import appStyles from '../components/Styles';
 const DailyQuote = () => {
   const [quote, setQuote] = useState('');
   const [author, setAuthor] = useState('');
-
+  // runs quote api 
   useEffect(() => {
     const fetchQuote = async () => {
       try {
