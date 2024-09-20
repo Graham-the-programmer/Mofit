@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { getAuth } from 'firebase/auth'; 
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig'; 
@@ -12,7 +12,11 @@ import DailyChallengeCard from '../components/DailyChallenge';
 const Dashboard = ({ navigation }) => {
   const [userName, setUserName] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
-  // retrive user dada for profile pic and name
+  
+
+
+
+  // retrive user data for profile pic and name
   useEffect(() => {
     const fetchUserData = async () => {
       const auth = getAuth(); 
